@@ -1,7 +1,10 @@
+import 'package:appwrite/models.dart' as model;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_clone/apis/auth_api.dart';
 import 'package:twitter_clone/core/core.dart';
+import 'package:twitter_clone/features/auth/view/login_view.dart';
+import 'package:twitter_clone/features/home/home_view.dart';
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, bool>((ref) {
@@ -10,12 +13,19 @@ final authControllerProvider =
   );
 });
 
+final currentUserAccountProvider = FutureProvider((ref) {
+  final AuthController = ref.watch(authControllerProvider.notifier);
+  return AuthController.currentUser();
+});
+
 class AuthController extends StateNotifier<bool> {
   final AuthAPI _authAPI;
   AuthController({required AuthAPI authAPI})
       : _authAPI = authAPI,
         super(false);
   // state = isLoading
+
+  Future<model.Account?> currentUser() => _authAPI.currentUserAccount();
 
   void signUp({
     required String email,
@@ -28,12 +38,12 @@ class AuthController extends StateNotifier<bool> {
       password: password,
     );
     state = false;
-    res.fold(
-      (l) {
-        showSnackbar(context, l.message);
-      },
-      (r) => print(r.email),
-    );
+    res.fold((l) {
+      showSnackbar(context, l.message);
+    }, (r) {
+      showSnackbar(context, 'Accounted created Please login. ');
+      Navigator.push(context, LoginView.route());
+    });
   }
 
   void login({
@@ -51,7 +61,9 @@ class AuthController extends StateNotifier<bool> {
       (l) {
         showSnackbar(context, l.message);
       },
-      (r) => print(r.userId),
+      (r) {
+        Navigator.push(context, HomeView.route());
+      },
     );
   }
 }
