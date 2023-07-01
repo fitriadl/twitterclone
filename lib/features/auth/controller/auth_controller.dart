@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_clone/apis/auth_api.dart';
 import 'package:twitter_clone/apis/user_api.dart';
+import 'package:twitter_clone/core/utils.dart';
 import 'package:twitter_clone/core/core.dart';
 import 'package:twitter_clone/features/auth/view/login_view.dart';
 import 'package:twitter_clone/features/home/home_view.dart';
@@ -16,9 +17,9 @@ final authControllerProvider =
   );
 });
 
-final currentUserDetailProvider =  FutureProvider((ref) {
+final currentUserDetailsProvider =  FutureProvider((ref) {
   final currentUserId = ref.watch(currentUserAccountProvider).value!.$id;
-  final userDetails = ref.watch(currentUserDetailProvider());
+  final userDetails = ref.watch(currentUserDetailsProvider());
   return userDetails.value;
 });
 
@@ -66,7 +67,7 @@ class AuthController extends StateNotifier<bool> {
         following: const [],
         profilePic: '',
         bannerPic: '',
-        uid: '',
+        uid: r.$id,
         bio: '',
         isTwitterBlue: false,
       );
