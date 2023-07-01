@@ -19,7 +19,7 @@ final authControllerProvider =
 
 final currentUserDetailsProvider =  FutureProvider((ref) {
   final currentUserId = ref.watch(currentUserAccountProvider).value!.$id;
-  final userDetails = ref.watch(currentUserDetailsProvider());
+  final userDetails = ref.watch(userDetailsProvider(currentUserId));
   return userDetails.value;
 });
 
@@ -91,7 +91,7 @@ class AuthController extends StateNotifier<bool> {
     );
     state = false;
     res.fold(
-      (l) => showSnackbar(context, l.message);
+      (l) => showSnackbar(context, l.message),
       (r) {
         Navigator.push(context, HomeView.route());
       },
