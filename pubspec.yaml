@@ -32,7 +32,6 @@ dependencies:
     sdk: flutter
   appwrite: ^8.3.0
   fpdart: ^0.5.0
-  file_picker: ^2.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -40,6 +39,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_riverpod: ^2.3.2
   flutter_svg: ^2.0.4
+  timeago: ^3.5.0
+  carousel_slider: ^4.2.1
+  any_link_preview: ^3.0.0
+  like_button: ^2.0.5
 
 dev_dependencies:
   flutter_test:

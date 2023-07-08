@@ -1,16 +1,17 @@
 import 'dart:io';
 
-import 'package:appwrite/models.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fpdart/fpdart.dart';
-import 'package:twitter_clone/common/common.dart';
+import 'package:twitter_clone/common/loading_page.dart';
+import 'package:twitter_clone/common/rounded_small_button.dart';
 import 'package:twitter_clone/constants/assets_constants.dart';
-import 'package:twitter_clone/core/core.dart';
 import 'package:twitter_clone/features/auth/controller/auth_controller.dart';
 import 'package:twitter_clone/features/tweet/controller/tweet_controller.dart';
 import 'package:twitter_clone/theme/pallete.dart';
+import 'package:twitter_clone/core/utils.dart';
+
 
 class CreatedTweetScreen extends ConsumerStatefulWidget {
    static route() => MaterialPageRoute(
@@ -33,7 +34,7 @@ class _CreateTweetScreenState extends ConsumerState<CreatedTweetScreen> {
     tweetTextController.dispose();
   }
 
-  void shareTweet(){
+  void shareTweet() {
     ref.read(tweetControllerProvider.notifier).shareTweet(
       images: images, 
       text: tweetTextController.text, 
@@ -104,22 +105,22 @@ class _CreateTweetScreenState extends ConsumerState<CreatedTweetScreen> {
             ),
             if(images.isNotEmpty)
             CarouselSlider(
-              item: images.map(
+              items: images.map(
                 (file) {
                   return Container(
                     width: MediaQuery.of(context).size.width, 
                     margin: const EdgeInsets.symmetric(
                       horizontal: 5,
                     ),
-                    child: Image.file(file),
+                    child: Image.file(file as File),
                   );
                 },
               ).toList(), 
-                option: CarouselOptions(
+                options: CarouselOptions(
                   height: 400,
                   enableInfiniteScroll : false,
                 ),
-            )
+            ),
           ],
         ),
         ),
