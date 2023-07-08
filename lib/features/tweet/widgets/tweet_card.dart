@@ -2,6 +2,7 @@ import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:like_button/like_button.dart';
 import 'package:twitter_clone/common/common.dart';
 import 'package:twitter_clone/common/error_page.dart';
 import 'package:twitter_clone/common/loading_page.dart';
@@ -104,6 +105,31 @@ class TweetCard extends ConsumerWidget {
                                 pathName: AssetsConstants.retweetIcon, 
                                 text: tweet.reshareCount.toString(),
                                 onTap: () {},
+                              ),
+                              LikeButton(
+                                size: 25,
+                                likeBuilder: (isLiked) {
+                                  return isLiked
+                                  ? SvgPicture.asset(
+                                      AssetsConstants.likeFilledIcon,
+                                      color: Pallete.redColor,
+                                    ) 
+                                  : SvgPicture.asset(
+                                      AssetsConstants.likeOutlinedIcon,
+                                      color: Pallete.greyColor,
+                                    );
+
+                                },
+                                LikeCount: tweet.likes.length,
+                                countBuilder: (likeCount, isLiked, text) {
+                                  return Text(text, style: TextStyle(
+                                    color: isLiked
+                                    ? Pallete.redColor 
+                                    : Pallete.whiteColor),
+                                    fontSize: 16,
+                                  );
+                                }
+                                
                               ),
                               TweetIconButton(
                                 pathName: AssetsConstants.likeOutlinedIcon, 
