@@ -9,6 +9,7 @@ import 'package:twitter_clone/common/loading_page.dart';
 import 'package:twitter_clone/constants/assets_constants.dart';
 import 'package:twitter_clone/core/enums/tweet_type_enum.dart';
 import 'package:twitter_clone/features/auth/controller/auth_controller.dart';
+import 'package:twitter_clone/features/tweet/controller/tweet_controller.dart';
 import 'package:twitter_clone/features/tweet/widgets/carousel_image.dart';
 import 'package:twitter_clone/features/tweet/widgets/hashtag_text.dart';
 import 'package:twitter_clone/features/tweet/widgets/tweet_icon_button.dart';
@@ -25,7 +26,11 @@ class TweetCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(userDetailsProvider(tweet.uid)).when(
+    final currentUser = ref.watch(currentUserDetailsProvider);
+
+    return currentUser == null 
+    ? const SizedBox() 
+    : ref.watch(userDetailsProvider(tweet.uid)).when(
       data: (user) {
         return Column(
           children: [
@@ -108,6 +113,15 @@ class TweetCard extends ConsumerWidget {
                               ),
                               LikeButton(
                                 size: 25,
+                                onTap: (isLiked) async {
+                                  ref
+                                  .read(tweetControllerProvider
+                                    .notifier)
+                                  .likeTweet(tweet, user);
+                                  return !isLiked;
+                                },
+                                isLiked: 
+                                  tweet.likes.contains(currentUser.uid),
                                 likeBuilder: (isLiked) {
                                   return isLiked
                                   ? SvgPicture.asset(
@@ -122,10 +136,11 @@ class TweetCard extends ConsumerWidget {
                                 },
                                 LikeCount: tweet.likes.length,
                                 countBuilder: (likeCount, isLiked, text) {
+                                  padding: const EdgeInsets.only(left: 2.0),
                                   return Text(text, style: TextStyle(
                                     color: isLiked
                                     ? Pallete.redColor 
-                                    : Pallete.whiteColor),
+                                    : Pallete.whiteColor  ),
                                     fontSize: 16,
                                   );
                                 }
