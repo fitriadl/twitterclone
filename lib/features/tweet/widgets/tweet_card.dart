@@ -2,6 +2,7 @@ import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:like_button/like_button.dart';
 import 'package:twitter_clone/common/common.dart';
 import 'package:twitter_clone/common/error_page.dart';
@@ -48,7 +49,25 @@ class TweetCard extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          //retweeted
+                          if (tweet.retweetedBy.isNotEmpty)
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                AssetsConstants.retweetIcon, 
+                                color: Pallete.greyColor, 
+                                height: 20,
+                              ),
+                              const SizedBox(width: 2),
+                              Text(
+                                '${tweet.retweetedBy} retweeted',
+                                style: const TextStyle(
+                                  color: Pallete.greyColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
                           Row(
                             children: [
                               Container(
@@ -109,7 +128,16 @@ class TweetCard extends ConsumerWidget {
                               TweetIconButton(
                                 pathName: AssetsConstants.retweetIcon, 
                                 text: tweet.reshareCount.toString(),
-                                onTap: () {},
+                                onTap: () {
+                                  ref
+                                    .read(tweetControllerProvider
+                                       .notifier)
+                                    .reshareTweet(
+                                      tweet, 
+                                      currentUser, 
+                                      context,
+                                    );
+                                },
                               ),
                               LikeButton(
                                 size: 25,
